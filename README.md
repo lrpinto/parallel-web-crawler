@@ -42,8 +42,18 @@ java -classpath target/udacity-webcrawler-1.0.jar com.udacity.webcrawler.main.We
 
 The output should be similar to the following:
 
+*resultData.txt*
+
 ```
 {"wordCounts":{"learning":153,"data":151,"udacity":117,"machine":111,"with":103},"urlsVisited":8}%
+```
+
+*profileData.txt*
+
+```
+Run at Sun, 7 May 2023 22:50:03 GMT
+com.udacity.webcrawler.ParallelWebCrawler#crawl took 0m 5s 30ms (called 1 times) [Thread ID: 1]
+com.udacity.webcrawler.parser.PageParserImpl#parse took 0m 2s 653ms (called 8 times) [Thread ID: 26]
 ```
 
 # Additional sample configs available
@@ -56,6 +66,10 @@ The output should be similar to the following:
 
  - Helpful to test whether the crawler skips web pages that declare a disallow in the robots.txt.
 
+*sample_config_system_out.json*
+
+- Helpful to test whether the crawler and profiler results are printed to system out when respective output paths are not given in the config.
+
 # Clean up
 
 To clean up run:
@@ -63,9 +77,3 @@ To clean up run:
 ```
 mvn clean
 ```
-
-
-
-
-
-

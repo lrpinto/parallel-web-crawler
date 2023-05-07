@@ -15,7 +15,9 @@ import java.io.BufferedWriter;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Objects;
 
 public final class WebCrawlerMain {
@@ -39,13 +41,26 @@ public final class WebCrawlerMain {
     CrawlResultWriter resultWriter = new CrawlResultWriter(result);
 
     // Write the crawl results to a JSON file (or System.out if the file name is empty)
-    String path = config.getResultPath();
-    if (path == null || path.isEmpty()) {
-      PrintWriter writer = new PrintWriter(new OutputStreamWriter(System.out, "UTF-8"));
+    String resultPath = config.getResultPath();
+    if (resultPath == null || resultPath.isEmpty()) {
+      PrintWriter writer = new PrintWriter(new OutputStreamWriter(System.out, StandardCharsets.UTF_8));
       resultWriter.write(writer);
+      writer.flush();
     } else {
-      resultWriter.write(Path.of(path));
+      resultWriter.write(Path.of(resultPath));
     }
+
+    // Write the profile data to a text file (or System.out if the file name is empty)
+    String profilerPath = config.getProfileOutputPath();
+    if (profilerPath == null || profilerPath.isEmpty()) {
+      PrintWriter writer = new PrintWriter(new OutputStreamWriter(System.out, StandardCharsets.UTF_8));
+      writer.write("\n");
+      profiler.writeData(writer);
+      writer.flush();
+    } else {
+      profiler.writeData(Path.of(profilerPath));
+    }
+
   }
 
   public static void main(String[] args) throws Exception {

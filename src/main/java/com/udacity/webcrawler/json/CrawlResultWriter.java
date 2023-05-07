@@ -13,6 +13,7 @@ import java.nio.file.OpenOption;
 import java.nio.file.Path;
 import java.util.Objects;
 
+import static java.nio.file.StandardOpenOption.APPEND;
 import static java.nio.file.StandardOpenOption.CREATE;
 
 /**
@@ -40,7 +41,7 @@ public final class CrawlResultWriter {
     // This is here to get rid of the unused variable warning.
     Objects.requireNonNull(path);
 
-    try (Writer writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8, CREATE)) {
+    try (Writer writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8, CREATE, APPEND)) {
       write(writer);
     } catch (IOException e) {
       e.printStackTrace();
@@ -62,6 +63,8 @@ public final class CrawlResultWriter {
     // De-serialise the json provided by the reader in order to populate a CrawlerConfiguration instance
     try {
       objectMapper.writeValue(writer, result);
+      // Write output in new line next time
+      writer.write("\n");
     } catch (IOException e) {
       e.printStackTrace();
     }

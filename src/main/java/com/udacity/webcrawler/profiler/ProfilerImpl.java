@@ -4,6 +4,7 @@ import javax.inject.Inject;
 import java.io.IOException;
 import java.io.Writer;
 import java.lang.reflect.Proxy;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Clock;
@@ -11,6 +12,8 @@ import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.Objects;
 
+import static java.nio.file.StandardOpenOption.APPEND;
+import static java.nio.file.StandardOpenOption.CREATE;
 import static java.time.format.DateTimeFormatter.RFC_1123_DATE_TIME;
 
 /**
@@ -79,8 +82,9 @@ final class ProfilerImpl implements Profiler {
     public void writeData(Path path) {
         Objects.requireNonNull(path, "Path must not be null");
 
-        try (Writer writer = Files.newBufferedWriter(path)) {
+        try (Writer writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8, CREATE, APPEND)) {
             writeData(writer);
+            writer.flush();
         } catch (IOException ex) {
             ex.printStackTrace();
         }
