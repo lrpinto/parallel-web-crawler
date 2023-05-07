@@ -46,8 +46,6 @@ public final class WebCrawlerMain {
     } else {
       resultWriter.write(Path.of(path));
     }
-
-    // TODO: Write the profile data to a text file (or System.out if the file name is empty)
   }
 
   public static void main(String[] args) throws Exception {
