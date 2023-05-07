@@ -2,6 +2,12 @@ package com.udacity.webcrawler;
 
 import com.udacity.webcrawler.parser.PageParserFactory;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.time.Clock;
 import java.time.Instant;
 import java.util.List;
@@ -9,6 +15,7 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.ForkJoinTask;
 import java.util.concurrent.RecursiveTask;
+import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
@@ -52,7 +59,7 @@ public class ParallelWebCrawlerTask extends RecursiveTask<Boolean> {
 
     /**
      * {@inheritDoc}
-     *
+     * <p>
      * Computes the crawling task for the given URL.
      *
      * @return {@code true} if the crawling task is successful, {@code false} otherwise.
@@ -64,6 +71,8 @@ public class ParallelWebCrawlerTask extends RecursiveTask<Boolean> {
                 .filter(u -> currentDepth != 0 && clock.instant().isBefore(deadline))
                 // Filter out URLs that match any of the ignored patterns
                 .filter(u -> urlsIgnored.stream().noneMatch(pattern -> pattern.matcher(u).matches()))
+                // Filter out url if is disallowed for crawling
+                .filter(u -> !isExcludedByRobotsTxt(u))
                 // Add the URL to the visited set and filter out if it was already visited
                 .filter(urlsVisited::add)
                 // Parse the page and get the result
@@ -82,6 +91,44 @@ public class ParallelWebCrawlerTask extends RecursiveTask<Boolean> {
                 })
                 // Find any result (optional, for completeness)
                 .findAny().isPresent();
+    }
+
+    // Auxiliary method that checks if a given URL is excluded by the robots.txt file.
+    // Usage: test with sample_config_disallow_robots.json and verify it visits zero urls.
+    private boolean isExcludedByRobotsTxt(String url) {
+        try {
+            URL robotsTxtUrl = new URL(url + "/robots.txt");
+            InputStream inputStream = robotsTxtUrl.openStream();
+
+            // Read the robots.txt file line by line using a BufferedReader
+            try (BufferedReader reader = new BufferedReader(
+                    new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
+                // Check whether the line starts with the "Disallow" word
+                Predicate<String> isDisallowedLine = line -> line.startsWith("Disallow:");
+                Predicate<String> isExcludedUrl = line -> {
+                    // Extract the excluded path from the line
+                    String excludedPath = line.substring("Disallow:".length()).trim();
+                    // Check if the URL ends with the excluded path or contains it with a trailing slash
+                    return url.endsWith(excludedPath) || url.contains(excludedPath + "/");
+                };
+
+                // Check if any line in robots.txt disallows the URL
+
+                // Read lines from the robots.txt file
+                return reader.lines()
+                        // Trim leading and trailing whitespace from each line
+                        .map(String::trim)
+                        // Filter out lines that start with "Disallow:"
+                        .filter(isDisallowedLine)
+                        // Check if any line excludes the URL
+                        .anyMatch(isExcludedUrl);
+
+            }
+        } catch (IOException e) {
+            // Error occurred while accessing the robots.txt file,
+            // consider the URL as not excluded
+            return false;
+        }
     }
 
 }

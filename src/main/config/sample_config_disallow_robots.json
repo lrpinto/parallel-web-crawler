@@ -1,0 +1,10 @@
+{
+  "startPages": ["https://reddit.com/"],
+  "ignoredUrls": ["https://blog.udacity.com/.*"],
+  "ignoredWords": ["^.{1,3}$"],
+  "parallelism": 4,
+  "maxDepth": 20,
+  "timeoutSeconds": 2,
+  "popularWordCount": 5,
+  "profileOutputPath": "profileData.txt"
+}
