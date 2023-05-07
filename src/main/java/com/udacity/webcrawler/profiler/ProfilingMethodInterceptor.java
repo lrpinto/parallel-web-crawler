@@ -54,7 +54,6 @@ final class ProfilingMethodInterceptor implements InvocationHandler {
         return isProfiled ? profiledInvocation(method, args) : method.invoke(delegate, args);
     }
 
-
     // Auxiliary method that performs a profile invocation on the delegate object
     private Object profiledInvocation(Method method, Object[] args) throws Throwable {
         // Get the current instant as the start time for profiling
@@ -68,17 +67,19 @@ final class ProfilingMethodInterceptor implements InvocationHandler {
             // Throw the original exception that was thrown by the method
             throw ex.getTargetException();
         } finally {
-            // Finally, record the duration
-            recordDuration(method, start);
+            // Finally, record the duration, calling count, and thread ID
+            recordInvocation(method, start);
         }
     }
 
-    // Auxiliary method to record the duration of the method invocation on the delegate object
-    private void recordDuration(Method method, Instant start) {
+    // Auxiliary method to record the duration, calling count, and thread ID of the method invocation on the delegate object
+    private void recordInvocation(Method method, Instant start) {
         // Calculate the duration of the method invocation
         Duration duration = Duration.between(start, clock.instant());
-        // Record the duration in the profiling state
-        state.record(delegate.getClass(), method, duration);
+        // Get the current thread ID
+        long threadId = Thread.currentThread().getId();
+        // Record the duration, calling count, and thread ID in the profiling state
+        state.record(delegate.getClass(), method, duration, 1, threadId);
     }
 
 }
