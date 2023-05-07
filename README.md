@@ -70,6 +70,10 @@ com.udacity.webcrawler.parser.PageParserImpl#parse took 0m 2s 653ms (called 8 ti
 
 - Helpful to test whether the crawler and profiler results are printed to system out when respective output paths are not given in the config.
 
+*sample_config_multiple_pages.json*
+
+- Helpful to test a greater depth, time out and multiple start pages.
+
 # Clean up
 
 To clean up run:
