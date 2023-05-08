@@ -51,7 +51,21 @@ final class ProfilingMethodInterceptor implements InvocationHandler {
         // Determine whether the method is annotated with the profiled annotation
         boolean isProfiled = method.isAnnotationPresent(Profiled.class);
         // Invoke the method with profiling if profiled, otherwise invoke it without profiling
-        return isProfiled ? profiledInvocation(method, args) : method.invoke(delegate, args);
+        return isProfiled ? profiledInvocation(method, args) : standardInvocation(method, args);
+    }
+
+    // Auxiliary method that performs a standard invocation on the delegate object
+    private Object standardInvocation(Method method, Object[] args) throws Throwable {
+        try {
+            Object result = method.invoke(delegate, args);
+            return result;
+        }  catch (IllegalAccessException ex) {
+            // Throw the checked exception wrapped in an unchecked exception
+            throw new RuntimeException(ex);
+        } catch (InvocationTargetException ex) {
+            // Throw the original exception that was thrown by the method
+            throw ex.getTargetException();
+        }
     }
 
     // Auxiliary method that performs a profile invocation on the delegate object
@@ -63,9 +77,12 @@ final class ProfilingMethodInterceptor implements InvocationHandler {
             // Invoke the method on the delegate object, and return the result of the method invocation
             Object result = method.invoke(delegate, args);
             return result;
-        } catch (InvocationTargetException ex) {
+        }  catch (InvocationTargetException ex) {
             // Throw the original exception that was thrown by the method
             throw ex.getTargetException();
+        }  catch (IllegalAccessException ex) {
+            // Throw the checked exception wrapped in an unchecked exception
+            throw new RuntimeException(ex);
         } finally {
             // Finally, record the duration, calling count, and thread ID
             recordInvocation(method, start);
