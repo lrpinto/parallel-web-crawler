@@ -51,10 +51,18 @@ The output should be similar to the following:
 *profileData.txt*
 
 ```
-Run at Sun, 7 May 2023 22:50:03 GMT
-com.udacity.webcrawler.ParallelWebCrawler#crawl took 0m 5s 30ms (called 1 times) [Thread ID: 1]
-com.udacity.webcrawler.parser.PageParserImpl#parse took 0m 2s 653ms (called 8 times) [Thread ID: 26]
+Run at Mon, 8 May 2023 01:23:24 GMT
+com.udacity.webcrawler.parser.PageParserImpl#parse took 0m 4s 704ms (called 18 times)
+[Thread ID: 32 (called 5 times)] - Average duration: 0m 0s 940ms
+[Thread ID: 18 (called 6 times)] - Average duration: 0m 0s 784ms
+[Thread ID: 21 (called 1 times)] - Average duration: 0m 4s 704ms
+[Thread ID: 25 (called 6 times)] - Average duration: 0m 0s 784ms
+
+com.udacity.webcrawler.ParallelWebCrawler#crawl took 0m 10s 113ms (called 1 times)
+[Thread ID: 1 (called 1 times)] - Average duration: 0m 10s 113ms
 ```
+
+**Note:** To see several threads in action you might need to use the VM option -XX:ActiveProcessorCount=<n> to override the number of CPUs that the VM automatically detects.
 
 # Additional sample configs available
 
