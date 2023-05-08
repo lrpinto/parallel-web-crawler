@@ -87,7 +87,7 @@ public class ParallelWebCrawlerTask extends RecursiveTask<Boolean> {
                                     urlsVisited,
                                     parserFactory, clock, urlsIgnored))
                             .map(ParallelWebCrawlerTask::fork)
-                            .forEach(ForkJoinTask::join);
+                            .forEach(ForkJoinTask::invoke);
                 })
                 // Find any result (optional, for completeness)
                 .findAny().isPresent();

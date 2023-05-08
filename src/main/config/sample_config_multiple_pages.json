@@ -4,6 +4,6 @@
   "ignoredWords": ["^.{1,3}$"],
   "parallelism": 4,
   "maxDepth": 20,
-  "timeoutSeconds": 60,
+  "timeoutSeconds": 10,
   "popularWordCount": 5
 }

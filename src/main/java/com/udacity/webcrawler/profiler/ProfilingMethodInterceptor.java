@@ -78,8 +78,9 @@ final class ProfilingMethodInterceptor implements InvocationHandler {
         Duration duration = Duration.between(start, clock.instant());
         // Get the current thread ID
         long threadId = Thread.currentThread().getId();
+
         // Record the duration, calling count, and thread ID in the profiling state
-        state.record(delegate.getClass(), method, duration, 1, threadId);
+        state.record(delegate.getClass(), method, duration, threadId);
     }
 
 }
