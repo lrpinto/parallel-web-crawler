@@ -62,7 +62,7 @@ com.udacity.webcrawler.ParallelWebCrawler#crawl took 0m 10s 113ms (called 1 time
 [Thread ID: 1 (called 1 times)] - Average duration: 0m 10s 113ms
 ```
 
-**Note:** To see several threads in action you might need to use the VM option -XX:ActiveProcessorCount=<n> to override the number of CPUs that the VM automatically detects.
+**Note:** To see several threads in action you might need to use the VM option `-XX:ActiveProcessorCount=<n>` to override the number of CPUs that the VM automatically detects. This will still be capped by the available processors at runtime.
 
 # Additional sample configs available
 
