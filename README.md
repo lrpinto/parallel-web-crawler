@@ -1,6 +1,6 @@
 # Parallel Web Crawler
 
-A parallel web crawler delivered as part of DevOps with Java Nano-degree by Swift and Udacity.
+A parallel web crawler delivered using advanced Java programming with fork/join tasks, parallel streaming and proxy pattern.
 
 ## Brief from the handout:
 
